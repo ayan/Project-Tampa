@@ -14,8 +14,9 @@ namespace Tampa.UI.Models
     {
         public PaletteButton(int width, int height, IControl control, IPaletteController controller)
         {
-            this.Button = new Button();
+            this.Button = new ToolStripButton();
             this.Button.Click += new EventHandler(Button_DoubleClick);
+            this.Button.MouseMove += new MouseEventHandler(Button_MouseMove);
             this.Button.Width = width;
             this.Button.Height = height;
             this.Button.Text = this.Icon = control.Icon;
@@ -23,12 +24,20 @@ namespace Tampa.UI.Models
             this.AssociatedControl = control;
         }
 
+        void Button_MouseMove(object sender, MouseEventArgs e)
+        {
+            if ((e.Button & MouseButtons.Left) == MouseButtons.Left)
+            {
+                this.Button.DoDragDrop(this, DragDropEffects.Copy);
+            }
+        }
+
         void Button_DoubleClick(object sender, EventArgs e)
         {
             _controller.RequestAddControl(this.AssociatedControl);
         }
 
-        public Button Button { get; private set;  }
+        public ToolStripButton Button { get; private set; }
         public string Icon { get; private set; }
         public IControl AssociatedControl { get; private set; }
 

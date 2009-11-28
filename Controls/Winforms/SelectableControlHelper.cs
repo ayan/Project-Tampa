@@ -49,8 +49,6 @@ namespace Tampa.Controls.WinForms
 
         public static void MouseMove(Control c, MouseEventArgs e)
         {
-            Debug.WriteLine(String.Format("Location: {0}, {1}", e.Location.X, e.Location.Y));
-
             Rectangle[] corners = GetCornersForControl(c);
 
             int i = 0;

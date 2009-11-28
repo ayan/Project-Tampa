@@ -18,7 +18,7 @@ namespace Tampa.Interfaces
         /// <summary>
         /// Called when the App should quit
         /// </summary>
-        void Quit();
+        bool Quit();
 
         /// <summary>
         /// Called when the main tampa window is shown

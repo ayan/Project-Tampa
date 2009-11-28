@@ -31,7 +31,7 @@ namespace Tampa.UI.Models
                 AddPaletteButtonFromControl(control); 
             }
 
-            UpdatePaletteBounds();
+            //UpdatePaletteBounds();
         }
 
         /// <summary>

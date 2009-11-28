@@ -26,7 +26,8 @@ namespace Tampa.UI.Controllers
         /// <param name="tampaWindow">The parent window for the view</param>
         public void Show(IWin32Window tampaWindow)
         {
-            _canvasView.Show(tampaWindow);
+            _canvasView.MdiParent = (tampaWindow as Form);
+            _canvasView.Show();
         }
 
         public void AddControl(IControl controlTypeToAdd)

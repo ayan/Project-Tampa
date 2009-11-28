@@ -16,13 +16,13 @@ namespace Tampa.UI.Controllers
         /// <summary>
         /// Constructor for the Palette controller
         /// </summary>
-        public PaletteController()
+        public PaletteController(ToolStrip paletteView)
         {
             _model = new PaletteModel(this);
             _model.InitializeFromControlManager(ControlManagerFactory.GetControlManager());
 
             // View has to be initialized only after the model
-            _paletteView = new Palette(this as IPaletteController);
+            _paletteView = paletteView;
         }
 
         /// <summary>
@@ -31,7 +31,14 @@ namespace Tampa.UI.Controllers
         /// <param name="tampaWindow">The parent window of the palette view</param>
         public void Show(IWin32Window tampaWindow)
         {
-            _paletteView.Show(tampaWindow);
+            _paletteView.Items.Clear();
+            _paletteView.Items.Add(new ToolStripLabel { Text = "Controls" });
+            _paletteView.Items.Add(new ToolStripSeparator());
+
+            foreach (PaletteButton button in _model.PaletteButtons)
+            {
+                _paletteView.Items.Add(button.Button);
+            }            
         }
 
         public PaletteModel GetModel()
@@ -47,6 +54,6 @@ namespace Tampa.UI.Controllers
         #endregion
 
         private PaletteModel _model;
-        private Palette _paletteView;
+        private ToolStrip _paletteView;
     }
 }

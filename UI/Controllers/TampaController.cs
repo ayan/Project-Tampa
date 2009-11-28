@@ -31,16 +31,17 @@ namespace Tampa.UI
 
             // Create the main view and the child window controllers
             _tampaMainWindow = new TampaWindow(this as ITampaController);
-            _paletteController = new PaletteController();
+            _paletteController = new PaletteController((ToolStrip) _tampaMainWindow.Controls["toolStrip1"]);
             _canvasController = new CanvasController();
         }
 
         /// <summary>
         /// Exit the application
         /// </summary>
-        public void Quit()
+        public bool Quit()
         {
             Application.Exit();
+            return false;
         }
 
         /// <summary>

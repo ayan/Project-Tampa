@@ -23,20 +23,19 @@ namespace Tampa
             _controller.Quit();
         }
 
-        protected override void OnFormClosing(FormClosingEventArgs e)
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            base.OnFormClosing(e);
-
-            Exit();
+            base.OnClosing(e);
+            e.Cancel = _controller.Quit();
         }
 
         private void TampaWindow_Loaded(object sender, EventArgs e)
         {
             _controller.OnMainWindowShown();
-            Rectangle rect = Screen.FromHandle(this.Handle).Bounds;
-            this.Width = rect.Width;
-            this.Left = rect.Left;
-            this.Top = rect.Top;
+            //Rectangle rect = Screen.FromHandle(this.Handle).Bounds;
+            //this.Width = rect.Width;
+            //this.Left = rect.Left;
+            //this.Top = rect.Top;
         }
 
         private ITampaController _controller;

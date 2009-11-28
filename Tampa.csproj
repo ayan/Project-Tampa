@@ -58,7 +58,8 @@
     <Compile Include="Controls\WinForms\SelectableButton.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Controls\WinForms\SelectableControlHelper.cs" />
+    <Compile Include="Controls\WinForms\SelectableControlHelper.cs">
+    </Compile>
     <Compile Include="Controls\WinForms\SelectableLabel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -83,12 +84,6 @@
     <Compile Include="UI\Controllers\TampaController.cs" />
     <Compile Include="UI\Models\PaletteButton.cs" />
     <Compile Include="UI\Models\PaletteModel.cs" />
-    <Compile Include="UI\Palette.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="UI\Palette.Designer.cs">
-      <DependentUpon>Palette.cs</DependentUpon>
-    </Compile>
     <Compile Include="UI\TampaWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -104,9 +99,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UI\Palette.resx">
-      <DependentUpon>Palette.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\TampaWindow.resx">
       <DependentUpon>TampaWindow.cs</DependentUpon>
