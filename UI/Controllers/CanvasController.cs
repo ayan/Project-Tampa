@@ -50,8 +50,6 @@ namespace Tampa.UI.Controllers
             control.IsSelected = true;
             _lastSelectedControl = control;
             _lastSelectedControl.UnderlyingControl.Refresh();
-
-            Debug.WriteLine("Selected " + _lastSelectedControl.UnderlyingControl.Text);
         }
 
         #endregion

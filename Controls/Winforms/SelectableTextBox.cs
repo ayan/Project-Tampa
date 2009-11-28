@@ -9,59 +9,33 @@ using System.Runtime.InteropServices;
 
 namespace Tampa.Controls.WinForms
 {
-    class SelectableTextBox: TextBox, ISelectableControl
+    /// <summary>
+    /// So text boxes are sneaky bastards
+    /// The problem is this. A text box looks like this:
+    /// 
+    ///  --------------
+    /// | foo          |
+    ///  --------------
+    ///  
+    /// Now, the border for the textbox is in the non-client area of the 
+    /// text boxes window. So you end up with all kinds of fun problems.
+    /// First, your grab handles are inside the text box borders now, which 
+    /// is no fun. Secondly, even if you were to paint the grab handles in
+    /// the non-client area- you dont get the OnMouseMove event from those
+    /// areas. So this weird bastardized grab handle clusterfuck emerges.
+    /// To simplify things, we become sneaky too and just use a disguised
+    /// selectableLabel as a text box
+    /// </summary>
+    class SelectableTextBox: SelectableLabel
     {
-        [DllImport("user32.dll")]
-        static extern IntPtr GetWindowDC(IntPtr hWnd);
-
-        [DllImport("user32.dll")]
-        static extern int ReleaseDC(IntPtr hWnd, IntPtr hDC);
-
-        public bool IsSelected
+        public SelectableTextBox()
         {
-            get;
-            set;
-        }
-
-        public void Unselect()
-        {
-            this.IsSelected = false;
-            this.Cursor = this.DefaultCursor;
-            this.Parent.Refresh();
-        }
-
-        protected override void WndProc(ref Message m)
-        {
-            switch (m.Msg)
-            {
-                case 0x0085://WM_NCPAINT
-                    if (IsSelected)
-                    {
-                        IntPtr hDC = GetWindowDC(this.Handle);
-                        Graphics g = Graphics.FromHdc(hDC);
-
-                        SelectableControlHelper.Select(this, g);
-
-
-                        ReleaseDC(this.Handle, hDC);//another win32 API
-                        g.Dispose();
-                    }
-                    break;
-
-                default:
-                    base.WndProc(ref m);
-                    break;
-            }
-        }
-
-        protected override void OnMouseMove(MouseEventArgs mevent)
-        {
-            base.OnMouseMove(mevent);
-
-            if (IsSelected)
-            {
-                SelectableControlHelper.MouseMove(this, mevent);
-            }
+            this.BackColor = System.Drawing.SystemColors.Window;
+            this.ForeColor = TextBox.DefaultForeColor;
+            this.TextAlign = ContentAlignment.MiddleLeft;
+            this.Padding = new Padding(5);
+            // 10 px padding
+            this.Height = (int) TextBox.DefaultFont.GetHeight() + 10;
         }
     }
 }
