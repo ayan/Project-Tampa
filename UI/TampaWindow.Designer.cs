@@ -98,7 +98,7 @@
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(5, 2, 0, 2);
-            this.toolStrip1.Size = new System.Drawing.Size(36, 440);
+            this.toolStrip1.Size = new System.Drawing.Size(30, 440);
             this.toolStrip1.TabIndex = 2;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -109,7 +109,6 @@
             this.ClientSize = new System.Drawing.Size(868, 464);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.IsMdiContainer = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "TampaWindow";

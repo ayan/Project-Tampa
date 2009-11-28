@@ -31,20 +31,21 @@ namespace Tampa.Controls.WinForms
         {
             base.OnPaint(pevent);
 
-            if (IsSelected)
-            {
-                SelectableControlHelper.Select(this, pevent);
-            }
+            //if (IsSelected)
+            //{
+            //    SelectableControlHelper.Select(this, pevent);
+            //}
         }
+        public ControlInstance Control { get; set; }
 
         protected override void OnMouseMove(MouseEventArgs mevent)
         {
             base.OnMouseMove(mevent);
 
-            if (IsSelected)
-            {
-                SelectableControlHelper.MouseMove(this, mevent);
-            }
+            //if (IsSelected)
+            //{
+            //    SelectableControlHelper.MouseMove(this, mevent);
+            //}
         }
     }
 }

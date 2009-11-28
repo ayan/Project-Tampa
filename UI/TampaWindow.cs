@@ -2,15 +2,28 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Tampa.Interfaces;
+using Tampa.Controls.WinForms;
 
 namespace Tampa
 {
     public partial class TampaWindow : Form
     {
+        SelectionOverlay Overlay { get; set; }
         public TampaWindow(ITampaController controller)
         {
             _controller = controller;
             InitializeComponent();
+
+            //this.Paint += new PaintEventHandler(TampaWindow_Paint);
+            Overlay = new SelectionOverlay(this);
+            this.Controls.Add(Overlay);
+            Overlay.Refresh();
+        }
+
+        void TampaWindow_Paint(object sender, PaintEventArgs e)
+        {
+            Overlay.Invalidate();
+            Overlay.Refresh();
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)

@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Tampa.Interfaces;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace Tampa.UI.Controllers
 {
@@ -30,9 +31,9 @@ namespace Tampa.UI.Controllers
             _canvasView.Show();
         }
 
-        public void AddControl(IControl controlTypeToAdd)
+        public void AddControl(IControl controlTypeToAdd, int x, int y)
         {
-            _canvasView.AddControl(controlTypeToAdd);
+            _canvasView.AddControl(controlTypeToAdd, x, y);
         }
 
         /// <summary>
@@ -48,6 +49,8 @@ namespace Tampa.UI.Controllers
                 _lastSelectedControl.UnderlyingControl.Refresh();
             }
 
+            (TampaController.GetInstance()).SetSelectedControl(control);
+
             control.IsSelected = true;
             _lastSelectedControl = control;
             _lastSelectedControl.UnderlyingControl.Refresh();
@@ -58,5 +61,10 @@ namespace Tampa.UI.Controllers
         // TEMPTEMP: Move to model
         private ControlInstance _lastSelectedControl;
         private Canvas _canvasView;
+
+        public ControlInstance GetControlFrom(Point screenLocation)
+        {
+            return _canvasView.GetControlAtPoint(screenLocation);
+        }
     }
 }

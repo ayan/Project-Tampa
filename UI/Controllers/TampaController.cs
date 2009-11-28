@@ -2,6 +2,9 @@
 using Tampa.Interfaces;
 using Tampa.UI.Controllers;
 using System.Threading;
+using Tampa.Controls.WinForms;
+using System;
+using System.Drawing;
 
 namespace Tampa.UI
 {
@@ -69,7 +72,32 @@ namespace Tampa.UI
         /// <param name="controlTypeToAdd">The control to add</param>
         public void HandleAddControlRequest(IControl controlTypeToAdd)
         {
-            _canvasController.AddControl(controlTypeToAdd);
+            int x = (new Random()).Next(800);
+            int y = (new Random()).Next(600);
+            _canvasController.AddControl(controlTypeToAdd, x, y);
+        }
+
+        /// <summary>
+        /// Handles a request to add a control
+        /// </summary>
+        /// <param name="controlTypeToAdd">The control to add</param>
+        public void HandleAddControlRequest(IControl controlTypeToAdd, int x, int y)
+        {
+            _canvasController.AddControl(controlTypeToAdd, x, y);
+        }
+
+        public void SetSelectedControl(ControlInstance control)
+        {
+            SelectionOverlay overlay = (SelectionOverlay)_tampaMainWindow.Controls["selectionOverlay"];
+
+            overlay.SetSelectedControl(control);
+        }
+
+        public void SelectControlAt(Point screenLocation)
+        {
+            SelectionOverlay overlay = (SelectionOverlay)_tampaMainWindow.Controls["selectionOverlay"];
+
+            overlay.SetSelectedControl(_canvasController.GetControlFrom(screenLocation));
         }
 
         #endregion

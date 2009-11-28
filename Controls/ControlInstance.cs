@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Tampa.Common;
+using System.Drawing;
+using System.Diagnostics;
 
 namespace Tampa.Interfaces
 {
@@ -16,9 +18,22 @@ namespace Tampa.Interfaces
         public ControlInstance(IControl control)
         {
             this.UnderlyingControl = control.AssociatedUserControlType.GetConstructor(new Type[0]).Invoke(new object[0]) as Control;
-            this.UnderlyingControl.Visible = true;            
+            this.UnderlyingControl.Visible = true;
+            (this.UnderlyingControl as ISelectableControl).Control = this;
             _props = new Dictionary<string, object>();
-            MakeControlEditable();
+            //MakeControlEditable();
+        }
+
+        /// <summary>
+        /// Constructor for the control instance
+        /// </summary>
+        /// <param name="control"></param>
+        public ControlInstance(Control control)
+        {
+            this.UnderlyingControl = control;
+            this.UnderlyingControl.Visible = true;
+            (this.UnderlyingControl as ISelectableControl).Control = this;
+            _props = new Dictionary<string, object>();
         }
 
         public EventHandler OnClick;
@@ -27,20 +42,22 @@ namespace Tampa.Interfaces
 
         public bool IsSelected
         {
-            get
-            {
-                return (this.UnderlyingControl as ISelectableControl).IsSelected;
-            }
-            set
-            {
-                (this.UnderlyingControl as ISelectableControl).IsSelected = value;
+            //get
+            //{
+            //    return (this.UnderlyingControl as ISelectableControl).IsSelected;
+            //}
+            //set
+            //{
+            //    (this.UnderlyingControl as ISelectableControl).IsSelected = value;
 
-                // gah- ugly hack
-                if (value == false)
-                {
-                    (this.UnderlyingControl as ISelectableControl).Unselect();
-                }
-            }
+            //    // gah- ugly hack
+            //    if (value == false)
+            //    {
+            //        (this.UnderlyingControl as ISelectableControl).Unselect();
+            //    }
+            //}
+            get;
+            set;
         }
 
         private void MakeControlEditable()
@@ -78,6 +95,8 @@ namespace Tampa.Interfaces
                     ControlInstance._propertyHandlers[knownProperty](val, this.UnderlyingControl);
                 }
             }
+
+            this.UnderlyingControl.Refresh();
         }
 
         /// <summary>
@@ -177,5 +196,17 @@ namespace Tampa.Interfaces
 
         protected static Dictionary<string, Func<object, Control, bool>> _propertyHandlers;
         private Dictionary<string, object> _props;
+
+        internal void UpdateProperties(int x, int y, int w, int h)
+        {
+            Debug.WriteLine(String.Format("Setting to {0}, {1}, {2}, {3}", x, y, w, h));
+            Point clientPoint = UnderlyingControl.Parent.PointToClient(new Point { X = x, Y = y });
+            this.Properties[CommonProperties.Left] = clientPoint.X;
+            this.Properties[CommonProperties.Top] = clientPoint.Y;
+            this.Properties[CommonProperties.Width] = w;
+            this.Properties[CommonProperties.Height] = h;
+            this.Update();
+            this.UnderlyingControl.Parent.Invalidate();
+        }
     }
 }

@@ -26,16 +26,29 @@ namespace Tampa.Controls.WinForms
     /// To simplify things, we become sneaky too and just use a disguised
     /// selectableLabel as a text box
     /// </summary>
-    class SelectableTextBox: SelectableLabel
+    class SelectableTextBox: TextBox, ISelectableControl
     {
-        public SelectableTextBox()
+        //public SelectableTextBox()
+        //{
+        //    this.BackColor = System.Drawing.SystemColors.Window;
+        //    this.ForeColor = TextBox.DefaultForeColor;
+        //    this.TextAlign = ContentAlignment.MiddleLeft;
+        //    this.Padding = new Padding(5);
+        //    // 10 px padding
+        //    this.Height = (int) TextBox.DefaultFont.GetHeight() + 10;
+        //}
+        public ControlInstance Control { get; set; }
+
+        public bool IsSelected
         {
-            this.BackColor = System.Drawing.SystemColors.Window;
-            this.ForeColor = TextBox.DefaultForeColor;
-            this.TextAlign = ContentAlignment.MiddleLeft;
-            this.Padding = new Padding(5);
-            // 10 px padding
-            this.Height = (int) TextBox.DefaultFont.GetHeight() + 10;
+            get;
+            set;
+        }
+
+        public void Unselect()
+        {
+            this.IsSelected = false;
+            this.Cursor = this.DefaultCursor;
         }
     }
 }

@@ -30,5 +30,11 @@ namespace Tampa.Interfaces
         /// </summary>
         /// <param name="controlTypeToAdd">The control to add</param>
         void HandleAddControlRequest(IControl controlTypeToAdd);
+
+        void SetSelectedControl(ControlInstance control);
+
+        void HandleAddControlRequest(IControl iControl, int p, int p_3);
+
+        void SelectControlAt(System.Drawing.Point point);
     }
 }

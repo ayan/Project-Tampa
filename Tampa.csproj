@@ -66,6 +66,12 @@
     <Compile Include="Controls\WinForms\SelectableTextBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\WinForms\SelectionOverlay.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\WinForms\SelectionOverlay.Designer.cs">
+      <DependentUpon>SelectionOverlay.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\ICanvasController.cs" />
     <Compile Include="Interfaces\IControl.cs" />
     <Compile Include="Controls\ControlInstance.cs" />
@@ -92,6 +98,9 @@
     </Compile>
     <Compile Include="Main\Tampa.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Controls\WinForms\SelectionOverlay.resx">
+      <DependentUpon>SelectionOverlay.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

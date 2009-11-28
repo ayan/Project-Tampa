@@ -9,6 +9,8 @@ namespace Tampa.Controls.WinForms
 {
     class SelectableLabel: Label, ISelectableControl
     {
+        public ControlInstance Control { get; set; }
+
         public bool IsSelected
         {
             get;
@@ -19,26 +21,6 @@ namespace Tampa.Controls.WinForms
         {
             this.IsSelected = false;
             this.Cursor = this.DefaultCursor;
-        }
-
-        protected override void OnPaint(PaintEventArgs pevent)
-        {
-            base.OnPaint(pevent);
-
-            if (IsSelected)
-            {
-                SelectableControlHelper.Select(this, pevent);
-            }
-        }
-
-        protected override void OnMouseMove(MouseEventArgs mevent)
-        {
-            base.OnMouseMove(mevent);
-
-            if (IsSelected)
-            {
-                SelectableControlHelper.MouseMove(this, mevent);
-            }
         }
     }
 }

@@ -9,9 +9,22 @@ using System.Diagnostics;
 
 namespace Tampa.Controls.WinForms
 {
+    public enum GrabHandles
+    {
+        TopLeft,
+        TopMiddle,
+        TopRight,
+        Right,
+        BottomRight,
+        BottomMiddle,
+        BottomLeft,
+        Left,
+        None
+    };
+
     class SelectableControlHelper
     {
-        private static Rectangle[] GetCornersForControl(Control c)
+        private static Rectangle[] GetCornersForControl(Rectangle c)
         {
             return new Rectangle[] 
             {
@@ -35,11 +48,21 @@ namespace Tampa.Controls.WinForms
 
         public static void Select(Control c, Graphics g)
         {
+            Select(c.ClientRectangle, g);
+        }
+
+        public static void Select(Rectangle c, Graphics g)
+        {
+            Debug.WriteLine(String.Format("selection overlay bounds: {0}", c));
             Rectangle[] corners = GetCornersForControl(c);
             foreach (Rectangle corner in corners)
             {
+                corner.Offset(c.Left, c.Top);
+                Debug.WriteLine(String.Format("Grab Handle: {0}", corner));
                 ControlPaint.DrawGrabHandle(g, corner, true, true);
             }
+
+            ControlPaint.DrawFocusRectangle(g, c);
         }
 
         public static void Select(Control c, PaintEventArgs p)
@@ -47,25 +70,27 @@ namespace Tampa.Controls.WinForms
             Select(c, p.Graphics);
         }
 
-        public static void MouseMove(Control c, MouseEventArgs e)
+        public static GrabHandles OnMouseMove(Rectangle c, Point p)
         {
             Rectangle[] corners = GetCornersForControl(c);
 
             int i = 0;
             for (; i < corners.Length; i++)
             {
-                if (corners[i].Contains(e.Location))
+                corners[i].Offset(c.Left, c.Top);
+                //Debug.WriteLine(String.Format("Checking if {0} is in {1}", p, corners[i]));
+                if (corners[i].Contains(p))
                 {
-                    c.Cursor = _cursorsForCorners[i];
-                    return;
+                    break;
                 }
             }
-            c.Cursor = _cursorsForCorners[i];
+            
+            return (GrabHandles) i;
         }
 
         public const int GrabHandleLength = 5;
         static readonly Size _grabHandleSize = new Size(GrabHandleLength, GrabHandleLength);
-        static readonly Cursor[] _cursorsForCorners = new Cursor[]
+        public static readonly Cursor[] CursorsForCorners = new Cursor[]
             {
                 Cursors.SizeNWSE,
                 Cursors.SizeNS,

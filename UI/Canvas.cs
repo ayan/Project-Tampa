@@ -5,53 +5,26 @@ using Tampa.UI.Models;
 using Tampa.Common;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Diagnostics;
 
 namespace Tampa.UI
 {
-    public partial class Canvas : Form
+    public partial class Canvas : Form, ISelectableControl
     {
         public Canvas(ICanvasController controller)
         {
             _controller = controller;
             InitializeComponent();
             this.AllowDrop = true;
-            this.DragDrop += new DragEventHandler(Canvas_DragDrop);
-            this.DragOver += new DragEventHandler(Canvas_DragOver);
+            this.Control = new ControlInstance(this);
         }
-
-        void Canvas_DragOver(object sender, DragEventArgs e)
-        {
-            e.Effect = DragDropEffects.Copy;
-        }
-
-        void Canvas_DragDrop(object sender, DragEventArgs e)
-        {
-            try
-            {
-                PaletteButton button = (PaletteButton)e.Data.GetData(typeof(PaletteButton));
-                Point p = this.PointToClient(new Point(e.X, e.Y));
-                AddControl(button.AssociatedControl, p.X, p.Y);
-            }
-            catch (Exception)
-            {
-                // Ignore random drops
-            }
-        }
-
-        public void AddControl(IControl control)
-        {
-            int x = (new Random()).Next(this.Width);
-            int y = (new Random()).Next(this.Height);
-
-            AddControl(control, x, y);
-        }
-
 
         public void AddControl(IControl control, int x, int y)
         {
+            Point p = PointToClient(new Point { X = x, Y = y });
             Dictionary<string, object> props = new Dictionary<string, object>();
-            props[CommonProperties.Left] = x;
-            props[CommonProperties.Top] = y;
+            props[CommonProperties.Left] = p.X;
+            props[CommonProperties.Top] = p.Y;
             props[CommonProperties.Text] = control.Icon + (this.Controls.Count + 1);
 
             AddControl(control, props);
@@ -69,8 +42,8 @@ namespace Tampa.UI
             instance.OnClick += delegate(object o, EventArgs e) { _controller.ControlSelected(instance, o, e); };
             instance.Update();
 
-            _controller.ControlSelected(instance, null, null);
             this.Controls.Add(instance.UnderlyingControl);
+            _controller.ControlSelected(instance, null, null);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -80,5 +53,42 @@ namespace Tampa.UI
         }
 
         private ICanvasController _controller;
+
+        internal ControlInstance GetControlAtPoint(Point screenLocation)
+        {
+            Debug.WriteLine(String.Format("Getting control at {0}", screenLocation)); 
+            Point p = this.PointToClient(screenLocation);
+            Debug.WriteLine(String.Format("Getting child control at {0}", p));
+            Control c = this.GetChildAtPoint(p, GetChildAtPointSkip.Invisible | GetChildAtPointSkip.Transparent);
+
+            if (c is ISelectableControl)
+            {
+                Debug.WriteLine("Found!");
+                return ((c as ISelectableControl).Control);
+            }
+
+            return this.Control;
+        }
+
+        #region ISelectableControl Members
+
+        public ControlInstance Control
+        {
+            get;
+            set;
+        }
+
+        public bool IsSelected
+        {
+            get;
+            set;
+        }
+
+        public void Unselect()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 }
