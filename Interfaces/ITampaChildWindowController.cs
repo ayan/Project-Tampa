@@ -6,9 +6,15 @@ using System.Windows.Forms;
 
 namespace Tampa.Interfaces
 {
+    /// <summary>
+    /// Interface f
+    /// </summary>
     public interface ITampaChildWindowController
     {
-        void Load();
+        /// <summary>
+        /// Shows the child window
+        /// </summary>
+        /// <param name="tampaWindow">Parent window</param>
         void Show(IWin32Window tampaWindow);
     }
 }

@@ -48,8 +48,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\BaseControl.cs" />
+    <Compile Include="Controls\ButtonControl.cs" />
+    <Compile Include="Controls\ControlManager.cs" />
+    <Compile Include="Controls\ControlManagerFactory.cs" />
+    <Compile Include="Controls\LabelControl.cs" />
+    <Compile Include="Controls\TextBoxControl.cs" />
     <Compile Include="Interfaces\ICanvasController.cs" />
     <Compile Include="Interfaces\IControl.cs" />
+    <Compile Include="Controls\ControlInstance.cs" />
     <Compile Include="Interfaces\IPaletteController.cs" />
     <Compile Include="Interfaces\ITampaController.cs" />
     <Compile Include="Interfaces\ITampaChildWindowController.cs" />
@@ -62,6 +69,8 @@
     <Compile Include="UI\Controllers\CanvasController.cs" />
     <Compile Include="UI\Controllers\PaletteController.cs" />
     <Compile Include="UI\Controllers\TampaController.cs" />
+    <Compile Include="UI\Models\PaletteButton.cs" />
+    <Compile Include="UI\Models\PaletteModel.cs" />
     <Compile Include="UI\Palette.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,7 +115,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="Controls\" />
     <Folder Include="InterfaceCompiler\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

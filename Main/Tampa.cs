@@ -11,9 +11,7 @@ namespace Tampa
         [STAThread]
         static void Main()
         {
-            TampaController controller = new TampaController();
-
-            controller.Run();
+            TampaController.GetInstance().Run();
         }
     }
 }
