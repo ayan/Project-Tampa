@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Tampa.Controls.WinForms;
 
 namespace Tampa.Controls
 {
@@ -19,7 +20,7 @@ namespace Tampa.Controls
 
         public override Type AssociatedUserControlType
         {
-            get { return typeof(Button); }
+            get { return typeof(SelectableButton); }
         }
 
         #endregion

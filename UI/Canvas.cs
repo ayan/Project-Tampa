@@ -20,7 +20,9 @@ namespace Tampa.UI
             instance.UnderlyingControl.Text = control.Icon + (this.Controls.Count + 1);
             instance.UnderlyingControl.Left = (new Random()).Next(this.Width - instance.UnderlyingControl.Width);
             instance.UnderlyingControl.Top = (new Random()).Next(this.Height - -instance.UnderlyingControl.Height);
+            instance.OnClick += delegate(object o, EventArgs e) { _controller.ControlSelected(instance, o, e); };
 
+            _controller.ControlSelected(instance, null, null);
             this.Controls.Add(instance.UnderlyingControl);
         }
 

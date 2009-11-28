@@ -48,16 +48,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Properties.cs" />
     <Compile Include="Controls\BaseControl.cs" />
     <Compile Include="Controls\ButtonControl.cs" />
     <Compile Include="Controls\ControlManager.cs" />
     <Compile Include="Controls\ControlManagerFactory.cs" />
     <Compile Include="Controls\LabelControl.cs" />
     <Compile Include="Controls\TextBoxControl.cs" />
+    <Compile Include="Controls\WinForms\SelectableButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\WinForms\SelectableControlHelper.cs" />
+    <Compile Include="Controls\WinForms\SelectableLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\WinForms\SelectableTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Interfaces\ICanvasController.cs" />
     <Compile Include="Interfaces\IControl.cs" />
     <Compile Include="Controls\ControlInstance.cs" />
     <Compile Include="Interfaces\IPaletteController.cs" />
+    <Compile Include="Interfaces\ISelectableControl.cs" />
     <Compile Include="Interfaces\ITampaController.cs" />
     <Compile Include="Interfaces\ITampaChildWindowController.cs" />
     <Compile Include="UI\Canvas.cs">
@@ -114,7 +126,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Common\" />
     <Folder Include="InterfaceCompiler\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

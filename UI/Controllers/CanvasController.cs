@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Tampa.Interfaces;
+using System.Diagnostics;
 
 namespace Tampa.UI.Controllers
 {
@@ -33,8 +34,30 @@ namespace Tampa.UI.Controllers
             _canvasView.AddControl(controlTypeToAdd);
         }
 
+        /// <summary>
+        /// Called when a control is selected
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void ControlSelected(ControlInstance control, object sender, EventArgs e)
+        {
+            if (_lastSelectedControl != null)
+            {
+                _lastSelectedControl.IsSelected = false;
+                _lastSelectedControl.UnderlyingControl.Refresh();
+            }
+
+            control.IsSelected = true;
+            _lastSelectedControl = control;
+            _lastSelectedControl.UnderlyingControl.Refresh();
+
+            Debug.WriteLine("Selected " + _lastSelectedControl.UnderlyingControl.Text);
+        }
+
         #endregion
 
+        // TEMPTEMP: Move to model
+        private ControlInstance _lastSelectedControl;
         private Canvas _canvasView;
     }
 }
