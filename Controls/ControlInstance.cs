@@ -42,20 +42,6 @@ namespace Tampa.Interfaces
 
         public bool IsSelected
         {
-            //get
-            //{
-            //    return (this.UnderlyingControl as ISelectableControl).IsSelected;
-            //}
-            //set
-            //{
-            //    (this.UnderlyingControl as ISelectableControl).IsSelected = value;
-
-            //    // gah- ugly hack
-            //    if (value == false)
-            //    {
-            //        (this.UnderlyingControl as ISelectableControl).Unselect();
-            //    }
-            //}
             get;
             set;
         }
@@ -206,7 +192,7 @@ namespace Tampa.Interfaces
             this.Properties[CommonProperties.Width] = w;
             this.Properties[CommonProperties.Height] = h;
             this.Update();
-            this.UnderlyingControl.Parent.Invalidate();
+            this.UnderlyingControl.Parent.Refresh();
         }
     }
 }

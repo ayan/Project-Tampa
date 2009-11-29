@@ -53,12 +53,12 @@ namespace Tampa.Controls.WinForms
 
         public static void Select(Rectangle c, Graphics g)
         {
-            Debug.WriteLine(String.Format("selection overlay bounds: {0}", c));
+//            Debug.WriteLine(String.Format("selection overlay bounds: {0}", c));
             Rectangle[] corners = GetCornersForControl(c);
             foreach (Rectangle corner in corners)
             {
                 corner.Offset(c.Left, c.Top);
-                Debug.WriteLine(String.Format("Grab Handle: {0}", corner));
+//                Debug.WriteLine(String.Format("Grab Handle: {0}", corner));
                 ControlPaint.DrawGrabHandle(g, corner, true, true);
             }
 

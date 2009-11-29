@@ -40,17 +40,29 @@ namespace Tampa.Controls.WinForms
         {
             _parent = parent;
             this.AllowDrop = true;
+            this.GrabHandleBeingMoved = GrabHandles.None;
             InitializeComponent();
             this.MouseMove += new MouseEventHandler(SelectionOverlay_MouseMove);
             this.MouseUp += new MouseEventHandler(SelectionOverlay_MouseUp);
+            this.MouseDown += new MouseEventHandler(SelectionOverlay_MouseDown);
             this.DragDrop += new DragEventHandler(Canvas_DragDrop);
             this.DragOver += new DragEventHandler(Canvas_DragOver);
+        }
+
+        void SelectionOverlay_MouseDown(object sender, MouseEventArgs mevent)
+        {
+            trace("Location: " + mevent.Location);
+            trace("Client loc: " + this.PointToClient(mevent.Location));
+            trace("Bounds: " + SelectionBounds);
+            trace("In Bounds: " + SelectionBounds.Contains(mevent.Location));
+            trace("In ClientBounds: " + SelectionBounds.Contains(this.PointToClient(mevent.Location)));
         }
 
         void SelectionOverlay_MouseUp(object sender, MouseEventArgs e)
         {
             if (GrabHandleBeingMoved != GrabHandles.None)
             {
+
                 MoveGrabHandle(GrabHandleBeingMoved, e.Location);
                 Debug.WriteLine("SelectionBounds is " + this.SelectionBounds);
                 Rectangle screenRect = _parent.RectangleToScreen(this.SelectionBounds);
@@ -61,6 +73,19 @@ namespace Tampa.Controls.WinForms
 
                 this.Invalidate();
                 this.GrabHandleBeingMoved = GrabHandles.None;
+            }
+            else if (NewSelectionBounds != null)
+            {
+                this.SelectionBounds = this.NewSelectionBounds.Value;
+                this.SelectionBounds.Inflate(SelectableControlHelper.GrabHandleLength, SelectableControlHelper.GrabHandleLength);
+                Rectangle screenRect = _parent.RectangleToScreen(this.SelectionBounds);
+                this.SelectedControl.UpdateProperties(screenRect.X + SelectableControlHelper.GrabHandleLength,
+                    screenRect.Y + SelectableControlHelper.GrabHandleLength,
+                    SelectionBounds.Width - SelectableControlHelper.GrabHandleLength * 2,
+                    SelectionBounds.Height - SelectableControlHelper.GrabHandleLength * 2);
+                this.SelectedCenter = new Point(SelectionBounds.Left + (SelectionBounds.Width / 2), SelectionBounds.Top + (SelectionBounds.Height + 2));
+                this.NewSelectionBounds = null;
+                this.Invalidate();
             }
             else
             {
@@ -114,16 +139,39 @@ namespace Tampa.Controls.WinForms
 
             this.Cursor = SelectableControlHelper.CursorsForCorners[(int)handle];
             if (mevent.Button == MouseButtons.Left &&
-               (handle != GrabHandles.None) &&
                 SelectionBounds != null)
             {
-                MoveGrabHandle(handle, mevent.Location);
-                GrabHandleBeingMoved = handle;
+                if (handle != GrabHandles.None)
+                {
+                    trace("Resizing");
+                    MoveGrabHandle(handle, mevent.Location);
+                    GrabHandleBeingMoved = handle;
+                }
+                else if (SelectionBounds.Contains(mevent.Location) || this.NewSelectionBounds != null)
+                {
+                    if (NewSelectionBounds == null)
+                    {
+                        SelectedCenter = new Point(mevent.Location.X - SelectionBounds.Left, mevent.Location.Y - SelectionBounds.Top);
+                    }
+
+                    Point newCenter = new Point(mevent.Location.X - SelectedCenter.X, mevent.Location.Y - SelectedCenter.Y);
+
+                    trace("New center is " + newCenter);
+                    NewSelectionBounds = new Rectangle(newCenter, this.SelectionBounds.Size);
+                    trace("Bounds were " + NewSelectionBounds);
+                    this.GrabHandleBeingMoved = GrabHandles.None;
+                }
+                else
+                {
+                    trace("Location: " + mevent.Location);
+                    trace("Client loc: " + this.PointToClient(mevent.Location));
+                    trace("Bounds: " + SelectionBounds);
+                }
             }
         }
 
         void trace(string s) { 
-            //Debug.WriteLine(s); 
+            Debug.WriteLine(s); 
         }
 
         void Canvas_DragOver(object sender, DragEventArgs e)
@@ -194,6 +242,18 @@ namespace Tampa.Controls.WinForms
         }
 
         public Rectangle SelectionBounds
+        {
+            get;
+            set;
+        }
+
+        public Point SelectedCenter
+        {
+            get;
+            set;
+        }
+
+        public Rectangle? NewSelectionBounds
         {
             get;
             set;
