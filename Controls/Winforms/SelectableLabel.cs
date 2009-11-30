@@ -7,9 +7,15 @@ using Tampa.Interfaces;
 
 namespace Tampa.Controls.WinForms
 {
-    class SelectableLabel: Label, ISelectableControl
+    class SelectableLabel: Label, ITampaControl
     {
         public ControlInstance Control { get; set; }
+
+        private static int i = 0;
+        public string GetUniqueName()
+        {
+            return ("Label " + i++);
+        }
 
         public bool IsSelected
         {
@@ -21,6 +27,36 @@ namespace Tampa.Controls.WinForms
         {
             this.IsSelected = false;
             this.Cursor = this.DefaultCursor;
+        }
+
+        public string OnClickHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnKeyPressHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseMoveHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseUpHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseDownHandler
+        {
+            get;
+            set;
         }
     }
 }

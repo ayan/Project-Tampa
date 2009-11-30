@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Tampa.Interfaces
 {
@@ -26,6 +27,18 @@ namespace Tampa.Interfaces
         void OnMainWindowShown();
 
         /// <summary>
+        /// Close the current canvas
+        /// </summary>
+        void CloseCanvas();
+
+        /// <summary>
+        /// Creates a new Canvas
+        /// </summary>
+        void NewCanvas(string fileName);
+
+        Control GetView();
+
+        /// <summary>
         /// Handles a request to add a control
         /// </summary>
         /// <param name="controlTypeToAdd">The control to add</param>
@@ -35,6 +48,12 @@ namespace Tampa.Interfaces
 
         void HandleAddControlRequest(IControl iControl, int p, int p_3);
 
+        void HandleEditControlRequest(ControlInstance instance);
+
+        void RequestRemoveControl(ControlInstance instance);
+
         void SelectControlAt(System.Drawing.Point point);
+
+        void SaveFile(string fileName);
     }
 }

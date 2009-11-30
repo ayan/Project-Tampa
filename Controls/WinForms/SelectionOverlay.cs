@@ -40,17 +40,47 @@ namespace Tampa.Controls.WinForms
         {
             _parent = parent;
             this.AllowDrop = true;
-            this.GrabHandleBeingMoved = GrabHandles.None;
+            Reset();
             InitializeComponent();
+            this.KeyUp += new KeyEventHandler(SelectionOverlay_KeyUp);
             this.MouseMove += new MouseEventHandler(SelectionOverlay_MouseMove);
             this.MouseUp += new MouseEventHandler(SelectionOverlay_MouseUp);
             this.MouseDown += new MouseEventHandler(SelectionOverlay_MouseDown);
+            this.MouseDoubleClick += new MouseEventHandler(SelectionOverlay_MouseDoubleClick);
             this.DragDrop += new DragEventHandler(Canvas_DragDrop);
             this.DragOver += new DragEventHandler(Canvas_DragOver);
         }
 
+        public void Reset()
+        {
+            this.GrabHandleBeingMoved = GrabHandles.None;
+            this.SelectedControl = null;
+            this.SelectionBounds = Rectangle.Empty;
+            this.SelectedCenter = Point.Empty;
+        }
+
+        void SelectionOverlay_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (SelectedControl == null) return;
+
+            if (e.KeyCode == Keys.Delete)
+            {
+                TampaController.GetInstance().RequestRemoveControl(this.SelectedControl);
+                Reset();
+            }
+        }
+
+        void SelectionOverlay_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (SelectedControl == null) return;
+
+            TampaController.GetInstance().HandleEditControlRequest(this.SelectedControl);
+        }
+
         void SelectionOverlay_MouseDown(object sender, MouseEventArgs mevent)
         {
+            if (SelectedControl == null) return;
+
             trace("Location: " + mevent.Location);
             trace("Client loc: " + this.PointToClient(mevent.Location));
             trace("Bounds: " + SelectionBounds);
@@ -62,7 +92,6 @@ namespace Tampa.Controls.WinForms
         {
             if (GrabHandleBeingMoved != GrabHandles.None)
             {
-
                 MoveGrabHandle(GrabHandleBeingMoved, e.Location);
                 Debug.WriteLine("SelectionBounds is " + this.SelectionBounds);
                 Rectangle screenRect = _parent.RectangleToScreen(this.SelectionBounds);
@@ -134,6 +163,8 @@ namespace Tampa.Controls.WinForms
 
         void SelectionOverlay_MouseMove(object sender, MouseEventArgs mevent)
         {
+            if (SelectedControl == null) return;
+
             //Debug.WriteLine(String.Format("Selection bounds is {0}", SelectionBounds));
             GrabHandles handle = SelectableControlHelper.OnMouseMove(SelectionBounds, mevent.Location);
 
@@ -214,7 +245,7 @@ namespace Tampa.Controls.WinForms
         {
             if (SelectedControl != null)
             {
-                SelectedControl.UnderlyingControl.Parent.Refresh();
+                SelectedControl.ParentControl.Refresh();
             }
 
             SelectedControl = ci;

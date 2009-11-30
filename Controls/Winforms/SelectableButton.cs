@@ -13,8 +13,14 @@ namespace Tampa.Controls.WinForms
     /// we didnt have to duplicate this everywhere but you cant derive
     /// from generic parameters
     /// </summary>
-    partial class SelectableButton: Button, ISelectableControl
+    partial class SelectableButton: Button, ITampaControl
     {
+        private static int i = 0;
+        public string GetUniqueName()
+        {
+            return ("Button " + i++);
+        }
+
         public bool IsSelected
         {
             get;
@@ -47,5 +53,39 @@ namespace Tampa.Controls.WinForms
             //    SelectableControlHelper.MouseMove(this, mevent);
             //}
         }
+
+        #region ITampaControl Members
+
+        public string OnClickHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnKeyPressHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseMoveHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseUpHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseDownHandler
+        {
+            get;
+            set;
+        }
+
+        #endregion
     }
 }

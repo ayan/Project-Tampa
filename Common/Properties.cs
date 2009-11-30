@@ -11,6 +11,7 @@ namespace Tampa.Common
         public const string Top = "Top";
         public const string Width = "Width";
         public const string Height = "Height";
-        public const string Text = "Text";        
+        public const string Text = "Text";
+        public const string Name = "Name";
     }
 }

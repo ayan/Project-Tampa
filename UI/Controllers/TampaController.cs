@@ -5,6 +5,9 @@ using System.Threading;
 using Tampa.Controls.WinForms;
 using System;
 using System.Drawing;
+using System.IO;
+using System.Xml;
+using System.Text;
 
 namespace Tampa.UI
 {
@@ -36,6 +39,7 @@ namespace Tampa.UI
             _tampaMainWindow = new TampaWindow(this as ITampaController);
             _paletteController = new PaletteController((ToolStrip) _tampaMainWindow.Controls["toolStrip1"]);
             _canvasController = new CanvasController();
+            _propertyDialogController = new PropertyDialogController();
         }
 
         /// <summary>
@@ -45,6 +49,28 @@ namespace Tampa.UI
         {
             Application.Exit();
             return false;
+        }
+
+        public void CloseCanvas()
+        {
+            _canvasController.Close();
+            _tampaMainWindow.CanvasClosed();
+            _canvasController = null;
+        }
+
+        public void NewCanvas(string fileName)
+        {
+            CloseCanvas();
+            _canvasController = new CanvasController();
+
+            if (fileName != null)
+            {
+                XmlDocument document = new XmlDocument();
+                document.Load(fileName);
+                _canvasController.SetCanvasXml(document);
+            }
+
+            _canvasController.Show(_tampaMainWindow);
         }
 
         /// <summary>
@@ -86,6 +112,11 @@ namespace Tampa.UI
             _canvasController.AddControl(controlTypeToAdd, x, y);
         }
 
+        public void HandleEditControlRequest(ControlInstance instance)
+        {
+            _propertyDialogController.ShowControlProperties(_tampaMainWindow, instance);
+        }
+
         public void SetSelectedControl(ControlInstance control)
         {
             SelectionOverlay overlay = (SelectionOverlay)_tampaMainWindow.Controls["selectionOverlay"];
@@ -100,10 +131,32 @@ namespace Tampa.UI
             overlay.SetSelectedControl(_canvasController.GetControlFrom(screenLocation));
         }
 
+        public void RequestRemoveControl(ControlInstance instance)
+        {
+            _canvasController.RemoveControl(instance);
+        }
+
+        public void SaveFile(string fileName)
+        {
+            using (FileStream fs = File.Open(fileName, FileMode.OpenOrCreate))
+            {
+                using (StreamWriter writer = new StreamWriter(fs, Encoding.Unicode))
+                {
+                    writer.Write(_canvasController.GetCanvasXml());
+                }
+            }
+        }
+
+        public Control GetView()
+        {
+            return _tampaMainWindow;
+        }
+
         #endregion
 
         private TampaWindow _tampaMainWindow;
         private IPaletteController _paletteController;
         private ICanvasController _canvasController;
+        private IPropertyDialogController _propertyDialogController;
     }
 }

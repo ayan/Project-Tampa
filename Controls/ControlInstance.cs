@@ -6,11 +6,18 @@ using System.Windows.Forms;
 using Tampa.Common;
 using System.Drawing;
 using System.Diagnostics;
+using Tampa.UI;
 
 namespace Tampa.Interfaces
 {
     public class ControlInstance
     {
+        protected class PropertyDealer
+        {
+            public Func<object, Control, object> PropertySetter { get; set; }
+            public Func<Control, object> PropertyGetter { get; set; }
+        }
+            
         /// <summary>
         /// Constructor for the control instance
         /// </summary>
@@ -18,6 +25,7 @@ namespace Tampa.Interfaces
         public ControlInstance(IControl control)
         {
             this.UnderlyingControl = control.AssociatedUserControlType.GetConstructor(new Type[0]).Invoke(new object[0]) as Control;
+            this.UnderlyingControl.Name = (this.UnderlyingControl as ISelectableControl).GetUniqueName();
             this.UnderlyingControl.Visible = true;
             (this.UnderlyingControl as ISelectableControl).Control = this;
             _props = new Dictionary<string, object>();
@@ -31,6 +39,7 @@ namespace Tampa.Interfaces
         public ControlInstance(Control control)
         {
             this.UnderlyingControl = control;
+            this.UnderlyingControl.Name = (this.UnderlyingControl as ISelectableControl).GetUniqueName(); 
             this.UnderlyingControl.Visible = true;
             (this.UnderlyingControl as ISelectableControl).Control = this;
             _props = new Dictionary<string, object>();
@@ -65,6 +74,15 @@ namespace Tampa.Interfaces
             SetupPropertyHandlers();
         }
 
+        public void Slurp()
+        {
+            // Go through the list of properties that have handlers associated with them
+            foreach (string knownProperty in ControlInstance._propertyHandlers.Keys)
+            {
+                this.Properties[knownProperty] = ControlInstance._propertyHandlers[knownProperty].PropertyGetter(this.UnderlyingControl);
+            }
+        }
+
         /// <summary>
         /// Update the control based on the properties associated with it
         /// </summary>
@@ -78,7 +96,7 @@ namespace Tampa.Interfaces
                 object val;
                 if (this.Properties.TryGetValue(knownProperty, out val))
                 {
-                    ControlInstance._propertyHandlers[knownProperty](val, this.UnderlyingControl);
+                    ControlInstance._propertyHandlers[knownProperty].PropertySetter(val, this.UnderlyingControl);
                 }
             }
 
@@ -140,59 +158,128 @@ namespace Tampa.Interfaces
         /// </summary>
         protected static void SetupPropertyHandlers()
         {
-            _propertyHandlers = new Dictionary<string, Func<object, Control, bool>>()
+            _propertyHandlers = new Dictionary<string, PropertyDealer>()
             {
                 { 
-                    CommonProperties.Top, 
-                    (o, c) =>
-                    { 
-                        return Handle<int>(() => c.Top = (int) o);
+                    CommonProperties.Top,
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<int>(() => c.Top = AsInt(o));
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return c.Top;
+                        })
                     }
-                },
+            },
                 { 
                     CommonProperties.Left, 
-                    (o, c) =>
-                    { 
-                        return Handle<int>(() => c.Left = (int) o);
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<int>(() => c.Left = AsInt(o));
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return c.Left;
+                        })
                     }
                 },
                 { 
                     CommonProperties.Height, 
-                    (o, c) =>
-                    { 
-                        return Handle<int>(() => c.Height = (int) o);
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<int>(() => c.Height = AsInt(o));
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return c.Height;
+                        })
                     }
                 },
                 { 
                     CommonProperties.Width, 
-                    (o, c) =>
-                    { 
-                        return Handle<int>(() => c.Width = (int) o);
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<int>(() => c.Width = AsInt(o));
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return c.Width;
+                        })
                     }
                 },
                 { 
                     CommonProperties.Text, 
-                    (o, c) =>
-                    { 
-                        return Handle<string>(() => c.Text = (string) o);
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<string>(() => c.Text = (string) o);
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return c.Text;
+                        })
                     }
                 }
             };
         }
 
-        protected static Dictionary<string, Func<object, Control, bool>> _propertyHandlers;
+        private static int AsInt(object o) { return (o is int ? (int)o : int.Parse(o.ToString())); }
+        protected static Dictionary<string, PropertyDealer> _propertyHandlers;
         private Dictionary<string, object> _props;
 
         internal void UpdateProperties(int x, int y, int w, int h)
         {
             Debug.WriteLine(String.Format("Setting to {0}, {1}, {2}, {3}", x, y, w, h));
-            Point clientPoint = UnderlyingControl.Parent.PointToClient(new Point { X = x, Y = y });
+
+            Point clientPoint = ParentControl.PointToClient(new Point { X = x, Y = y });
             this.Properties[CommonProperties.Left] = clientPoint.X;
             this.Properties[CommonProperties.Top] = clientPoint.Y;
             this.Properties[CommonProperties.Width] = w;
             this.Properties[CommonProperties.Height] = h;
             this.Update();
-            this.UnderlyingControl.Parent.Refresh();
+            this.ParentControl.Refresh();
+        }
+
+        public Control ParentControl
+        {
+            get
+            {
+                return (UnderlyingControl.Parent ?? (UnderlyingControl as Form).MdiParent) ?? TampaController.GetInstance().GetView();
+            }
+        }
+
+        public void Serialize(System.Xml.XmlWriter writer)
+        {
+            Type type = this.UnderlyingControl.GetType();
+
+            writer.WriteStartElement(type.Name);
+
+            foreach (string property in this.Properties.Keys)
+            {
+                writer.WriteAttributeString(property, this.Properties[property].ToString());
+            }
+
+            writer.WriteEndElement();
         }
     }
 }

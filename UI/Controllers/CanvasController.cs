@@ -3,6 +3,10 @@ using System.Windows.Forms;
 using Tampa.Interfaces;
 using System.Diagnostics;
 using System.Drawing;
+using System.Text;
+using System.Xml;
+using Tampa.Controls;
+using System.Collections.Generic;
 
 namespace Tampa.UI.Controllers
 {
@@ -29,6 +33,7 @@ namespace Tampa.UI.Controllers
         {
             _canvasView.MdiParent = (tampaWindow as Form);
             _canvasView.Show();
+            TampaController.GetInstance().SetSelectedControl(_canvasView.Control);
         }
 
         public void AddControl(IControl controlTypeToAdd, int x, int y)
@@ -56,6 +61,30 @@ namespace Tampa.UI.Controllers
             _lastSelectedControl.UnderlyingControl.Refresh();
         }
 
+        public void RemoveControl(ControlInstance control)
+        {
+            _canvasView.RemoveControl(control);
+        }
+
+        public string GetCanvasXml()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Encoding = Encoding.Unicode;
+
+#if DEBUG
+            settings.Indent = true;
+#endif
+
+            using (XmlWriter xmlWriter = XmlWriter.Create(sb, settings))
+            {
+                _canvasView.Serialize(xmlWriter);
+            }
+
+            return sb.ToString();
+        }
+
         #endregion
 
         // TEMPTEMP: Move to model
@@ -66,5 +95,47 @@ namespace Tampa.UI.Controllers
         {
             return _canvasView.GetControlAtPoint(screenLocation);
         }
+
+        #region ICanvasController Members
+
+
+        public void Close()
+        {
+            _canvasView.Close();
+        }
+
+        public void SetCanvasXml(XmlDocument document)
+        {
+            XmlNode node = document.SelectSingleNode("/Canvas");
+
+            if (node == null)
+            {
+                return;
+            }
+
+            foreach (XmlAttribute attr in node.Attributes)
+            {
+                _canvasView.Control.Properties[attr.LocalName] = attr.Value;
+            }
+
+            foreach (XmlNode n in node.ChildNodes)
+            {
+                ControlManager manager = ControlManagerFactory.GetControlManager();
+                IControl control = manager.GetControlForType(n.Name);
+
+                Dictionary<string, object> properties = new Dictionary<string, object>();
+                
+                foreach (XmlAttribute attr in n.Attributes)
+                {
+                    properties[attr.LocalName] = attr.Value;
+                }
+
+                _canvasView.AddControl(control, properties);
+            }
+
+            _canvasView.Control.Update();
+        }
+
+        #endregion
     }
 }

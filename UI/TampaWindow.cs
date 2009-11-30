@@ -52,5 +52,32 @@ namespace Tampa
         }
 
         private ITampaController _controller;
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                _controller.SaveFile(saveFileDialog1.FileName);
+            }
+        }
+
+        internal void CanvasClosed()
+        {
+            this.Overlay.Reset();
+            this.Invalidate(true);
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _controller.NewCanvas(null);
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
+            {
+                _controller.NewCanvas(openFileDialog1.FileName);
+            }
+        }
     }
 }

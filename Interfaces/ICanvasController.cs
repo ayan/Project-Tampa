@@ -1,5 +1,7 @@
 ﻿
 using System;
+using System.Collections.Generic;
+using System.Xml;
 namespace Tampa.Interfaces
 {
     public interface ICanvasController: ITampaChildWindowController
@@ -17,6 +19,14 @@ namespace Tampa.Interfaces
         /// <param name="e"></param>
         void ControlSelected(ControlInstance control, object sender, EventArgs e);
 
+        void RemoveControl(ControlInstance instance);
+
+        string GetCanvasXml();
+
         ControlInstance GetControlFrom(System.Drawing.Point screenLocation);
+
+        void Close();
+
+        void SetCanvasXml(XmlDocument canvasXml);
     }
 }

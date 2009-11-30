@@ -11,12 +11,15 @@ namespace Tampa.UI
 {
     public partial class Canvas : Form, ISelectableControl
     {
+        public string GetUniqueName() { return "Canvas"; }
+
         public Canvas(ICanvasController controller)
         {
             _controller = controller;
             InitializeComponent();
             this.AllowDrop = true;
             this.Control = new ControlInstance(this);
+            this.ControlInstances = new List<ControlInstance>();
         }
 
         public void AddControl(IControl control, int x, int y)
@@ -42,9 +45,18 @@ namespace Tampa.UI
             instance.OnClick += delegate(object o, EventArgs e) { _controller.ControlSelected(instance, o, e); };
             instance.Update();
 
+            this.ControlInstances.Add(instance);
             this.Controls.Add(instance.UnderlyingControl);
             _controller.ControlSelected(instance, null, null);
         }
+
+        public void RemoveControl(ControlInstance instance)
+        {
+            ControlInstances.Remove(instance);
+            this.Controls.Remove(instance.UnderlyingControl);
+        }
+
+        public List<ControlInstance> ControlInstances { get; private set;  }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
@@ -90,5 +102,23 @@ namespace Tampa.UI
         }
 
         #endregion
+
+        public void Serialize(System.Xml.XmlWriter writer)
+        {
+            writer.WriteStartElement("Canvas");
+
+            // Weird slapdash hybrid because we dont support arbitrarily nested controls
+            foreach (string property in Control.Properties.Keys)
+            {
+                writer.WriteAttributeString(property, Control.Properties[property].ToString());
+            }
+
+            foreach (ControlInstance instance in this.ControlInstances)
+            {
+                instance.Serialize(writer);
+            }
+
+            writer.WriteEndElement();
+        }
     }
 }

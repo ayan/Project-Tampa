@@ -21,9 +21,9 @@ namespace Tampa.Controls
             {
                 _manager = new ControlManager();
 
-                _manager.Controls.Add(new ButtonControl());
-                _manager.Controls.Add(new LabelControl());
-                _manager.Controls.Add(new TextBoxControl());
+                _manager.AddControl(new ButtonControl(), "SelectableButton");
+                _manager.AddControl(new LabelControl(), "SelectableLabel");
+                _manager.AddControl(new TextBoxControl(), "SelectableTextBox");
 
                 return _manager;
             }

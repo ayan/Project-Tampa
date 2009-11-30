@@ -13,9 +13,23 @@ namespace Tampa.Controls
     {
         public ControlManager()
         {
-            this.Controls = new List<IControl>();
+            _controls = new Dictionary<string, IControl>();
         }
 
-        public List<IControl> Controls { get; set; }
+        public void AddControl(IControl control, string underlyingType)
+        {
+            _controls[underlyingType] = control;
+        }
+
+        public IControl GetControlForType(string underlyingType)
+        {
+            return _controls[underlyingType];
+        }
+
+        private Dictionary<string, IControl> _controls;
+        public List<IControl> Controls
+        {
+            get { return _controls.Values.ToList(); }
+        }
     }
 }

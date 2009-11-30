@@ -76,7 +76,9 @@
     <Compile Include="Interfaces\IControl.cs" />
     <Compile Include="Controls\ControlInstance.cs" />
     <Compile Include="Interfaces\IPaletteController.cs" />
+    <Compile Include="Interfaces\IPropertyDialogController.cs" />
     <Compile Include="Interfaces\ISelectableControl.cs" />
+    <Compile Include="Interfaces\ITampaControl.cs" />
     <Compile Include="Interfaces\ITampaController.cs" />
     <Compile Include="Interfaces\ITampaChildWindowController.cs" />
     <Compile Include="UI\Canvas.cs">
@@ -87,9 +89,16 @@
     </Compile>
     <Compile Include="UI\Controllers\CanvasController.cs" />
     <Compile Include="UI\Controllers\PaletteController.cs" />
+    <Compile Include="UI\Controllers\PropertyDialogController.cs" />
     <Compile Include="UI\Controllers\TampaController.cs" />
     <Compile Include="UI\Models\PaletteButton.cs" />
     <Compile Include="UI\Models\PaletteModel.cs" />
+    <Compile Include="UI\PropertiesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UI\PropertiesDialog.Designer.cs">
+      <DependentUpon>PropertiesDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="UI\TampaWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -108,6 +117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UI\Canvas.resx">
       <DependentUpon>Canvas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UI\PropertiesDialog.resx">
+      <DependentUpon>PropertiesDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UI\TampaWindow.resx">
       <DependentUpon>TampaWindow.cs</DependentUpon>
