@@ -165,7 +165,7 @@ namespace Tampa.UI
             string className = Path.GetFileNameWithoutExtension(fileName);
             string javaSource = compiler.Compile(document, className);
             
-            using (FileStream fs = File.Open(fileName, FileMode.OpenOrCreate | FileMode.Truncate))
+            using (FileStream fs = File.Open(fileName, FileMode.Create))
             {
                 using (StreamWriter writer = new StreamWriter(fs, Encoding.Unicode))
                 {
