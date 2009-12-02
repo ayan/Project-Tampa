@@ -58,5 +58,11 @@ namespace Tampa.Controls.WinForms
             get;
             set;
         }
+
+        public int ZIndex
+        {
+            get;
+            set;
+        }
     }
 }

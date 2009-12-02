@@ -8,6 +8,8 @@ using System.Drawing;
 using System.IO;
 using System.Xml;
 using System.Text;
+using Tampa.Common;
+using Tampa.InterfaceCompiler;
 
 namespace Tampa.UI
 {
@@ -112,6 +114,11 @@ namespace Tampa.UI
             _canvasController.AddControl(controlTypeToAdd, x, y);
         }
 
+        public void ShowContextMenu(Point p)
+        {
+            _tampaMainWindow.ContextMenuStrip.Show(p);
+        }
+
         public void HandleEditControlRequest(ControlInstance instance)
         {
             _propertyDialogController.ShowControlProperties(_tampaMainWindow, instance);
@@ -143,6 +150,26 @@ namespace Tampa.UI
                 using (StreamWriter writer = new StreamWriter(fs, Encoding.Unicode))
                 {
                     writer.Write(_canvasController.GetCanvasXml());
+                }
+            }
+        }
+
+        public void Compile(string fileName, CompileTargets target)
+        {
+            string source = _canvasController.GetCanvasXml();
+            XmlDocument document = new XmlDocument();
+
+            document.LoadXml(source);
+
+            ICompiler compiler = CompilerFactory.GetCompiler(target);
+            string className = Path.GetFileNameWithoutExtension(fileName);
+            string javaSource = compiler.Compile(document, className);
+            
+            using (FileStream fs = File.Open(fileName, FileMode.OpenOrCreate | FileMode.Truncate))
+            {
+                using (StreamWriter writer = new StreamWriter(fs, Encoding.Unicode))
+                {
+                    writer.Write(javaSource);
                 }
             }
         }

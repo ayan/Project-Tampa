@@ -239,7 +239,104 @@ namespace Tampa.Interfaces
                             return c.Text;
                         })
                     }
+                },
+                { 
+                    CommonProperties.Name, 
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<string>(() => c.Name = (string) o);
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return c.Name;
+                        })
+                    }
+                },
+                { 
+                    CommonProperties.OnClick, 
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<string>(() => ((ITampaControl)c).OnClickHandler = (string) o);
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return ((ITampaControl)c).OnClickHandler;
+                        })
+                    }
+                },
+                { 
+                    CommonProperties.OnKeyPressHandler, 
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<string>(() => ((ITampaControl)c).OnKeyPressHandler = (string) o);
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return ((ITampaControl)c).OnKeyPressHandler;
+                        })
+                    }
+                },
+                { 
+                    CommonProperties.OnMouseDownHandler, 
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<string>(() => ((ITampaControl)c).OnMouseDownHandler = (string) o);
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return ((ITampaControl)c).OnMouseDownHandler;
+                        })
+                    }
+                },
+                { 
+                    CommonProperties.OnMouseMoveHandler, 
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<string>(() => ((ITampaControl)c).OnMouseMoveHandler = (string) o);
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return ((ITampaControl)c).OnMouseMoveHandler;
+                        })
+                    }
+                },
+                { 
+                    CommonProperties.OnMouseUpHandler, 
+                    new PropertyDealer
+                    {
+                        PropertySetter =
+                        (o, c) =>
+                        { 
+                            return Handle<string>(() => ((ITampaControl)c).OnMouseUpHandler = (string) o);
+                        },
+                        PropertyGetter =
+                        ((c) =>
+                        {
+                            return ((ITampaControl)c).OnMouseUpHandler;
+                        })
+                    }
                 }
+
             };
         }
 
@@ -270,13 +367,18 @@ namespace Tampa.Interfaces
 
         public void Serialize(System.Xml.XmlWriter writer)
         {
+            Slurp();
+
             Type type = this.UnderlyingControl.GetType();
 
             writer.WriteStartElement(type.Name);
 
             foreach (string property in this.Properties.Keys)
             {
-                writer.WriteAttributeString(property, this.Properties[property].ToString());
+                if (this.Properties[property] != null)
+                {
+                    writer.WriteAttributeString(property, this.Properties[property].ToString());
+                }
             }
 
             writer.WriteEndElement();

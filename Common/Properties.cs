@@ -13,5 +13,11 @@ namespace Tampa.Common
         public const string Height = "Height";
         public const string Text = "Text";
         public const string Name = "Name";
+
+        public const string OnClick = "OnClickHandler";
+        public const string OnKeyPressHandler = "OnKeyPressHandler";
+        public const string OnMouseMoveHandler = "OnMouseMoveHandler";
+        public const string OnMouseUpHandler = "OnMouseUpHandler";
+        public const string OnMouseDownHandler = "OnMouseDownHandler";
     }
 }

@@ -72,9 +72,7 @@ namespace Tampa.Controls.WinForms
 
         void SelectionOverlay_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            if (SelectedControl == null) return;
-
-            TampaController.GetInstance().HandleEditControlRequest(this.SelectedControl);
+            ShowProperties();
         }
 
         void SelectionOverlay_MouseDown(object sender, MouseEventArgs mevent)
@@ -119,6 +117,10 @@ namespace Tampa.Controls.WinForms
             else
             {
                 TampaController.GetInstance().SelectControlAt(this.PointToScreen(e.Location));
+                if (e.Button == MouseButtons.Right)
+                {
+                    TampaController.GetInstance().ShowContextMenu(this.PointToScreen(e.Location));
+                }
             }
         }
 
@@ -322,6 +324,29 @@ namespace Tampa.Controls.WinForms
             Parent.Invalidate(rc, true);
             //move and refresh the controls here
 
+        }
+
+        internal void SendControlBehind()
+        {
+            if (SelectedControl == null) return;
+
+            SelectedControl.UnderlyingControl.SendToBack();
+            (SelectedControl.UnderlyingControl as ISelectableControl).ZIndex--;
+        }
+
+        internal void BringControlInFront()
+        {
+            if (SelectedControl == null) return;
+
+            SelectedControl.UnderlyingControl.BringToFront();
+            (SelectedControl.UnderlyingControl as ISelectableControl).ZIndex++;
+        }
+
+        internal void ShowProperties()
+        {
+            if (SelectedControl == null) return;
+
+            TampaController.GetInstance().HandleEditControlRequest(this.SelectedControl);
         }
     }
 }

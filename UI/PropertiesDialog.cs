@@ -26,7 +26,11 @@ namespace Tampa.UI
         public void SetControl(ControlInstance instance)
         {
             _instance = instance;
-            this.propertyGrid.SelectedObject = instance.UnderlyingControl;
+
+            if (this.propertyGrid.SelectedObject != instance.UnderlyingControl)
+            {
+                this.propertyGrid.SelectedObject = instance.UnderlyingControl;
+            }
         }
 
         IPropertyDialogController _controller;

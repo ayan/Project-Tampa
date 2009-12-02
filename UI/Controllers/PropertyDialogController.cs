@@ -26,13 +26,22 @@ namespace Tampa.UI.Controllers
         public void UpdateProperties(ControlInstance instance)
         {
             instance.Slurp();
-            _view.Hide();
+            if (isViewShown)
+            {
+                _view.Hide();
+                isViewShown = false;
+            }
         }
 
         public void RevertProperties(ControlInstance instance)
         {
             instance.Update();
-            _view.Hide();
+
+            if (isViewShown)
+            {
+                _view.Hide();
+                isViewShown = false;
+            }
         }
 
         #endregion
@@ -41,11 +50,16 @@ namespace Tampa.UI.Controllers
 
         public void Show(System.Windows.Forms.IWin32Window tampaWindow)
         {
-            _view.Show(tampaWindow);
+            if (!isViewShown)
+            {
+                _view.Show(tampaWindow);
+                isViewShown = true;
+            }
         }
 
         #endregion
 
+        bool isViewShown = false;
         PropertiesDialog _view;
     }
 }

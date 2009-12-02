@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Tampa.Common;
+using System.Drawing;
 
 namespace Tampa.Interfaces
 {
@@ -55,5 +57,9 @@ namespace Tampa.Interfaces
         void SelectControlAt(System.Drawing.Point point);
 
         void SaveFile(string fileName);
+
+        void Compile(string p, CompileTargets compileTargets);
+
+        void ShowContextMenu(Point point);
     }
 }

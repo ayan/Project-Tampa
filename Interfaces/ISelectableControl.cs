@@ -11,5 +11,6 @@ namespace Tampa.Interfaces
         ControlInstance Control { get; set; }
         bool IsSelected { get; set; }
         void Unselect();
+        int ZIndex { get; set; }
     }
 }

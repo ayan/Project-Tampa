@@ -9,9 +9,11 @@ using System.Diagnostics;
 
 namespace Tampa.UI
 {
-    public partial class Canvas : Form, ISelectableControl
+    public partial class Canvas : Form, ITampaControl
     {
         public string GetUniqueName() { return "Canvas"; }
+
+        public int ZIndex { get; set; }
 
         public Canvas(ICanvasController controller)
         {
@@ -107,10 +109,14 @@ namespace Tampa.UI
         {
             writer.WriteStartElement("Canvas");
 
+            Control.Slurp();
             // Weird slapdash hybrid because we dont support arbitrarily nested controls
             foreach (string property in Control.Properties.Keys)
             {
-                writer.WriteAttributeString(property, Control.Properties[property].ToString());
+                if (Control.Properties[property] != null)
+                {
+                    writer.WriteAttributeString(property, Control.Properties[property].ToString());
+                }
             }
 
             foreach (ControlInstance instance in this.ControlInstances)
@@ -119,6 +125,36 @@ namespace Tampa.UI
             }
 
             writer.WriteEndElement();
+        }
+
+        public string OnClickHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnKeyPressHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseMoveHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseUpHandler
+        {
+            get;
+            set;
+        }
+
+        public string OnMouseDownHandler
+        {
+            get;
+            set;
         }
     }
 }

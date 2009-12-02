@@ -8,10 +8,10 @@ namespace Tampa.Interfaces
 {
     interface ITampaControl: ISelectableControl
     {
-        string OnClickHandler { get; }
-        string OnKeyPressHandler { get; }
-        string OnMouseMoveHandler { get; }
-        string OnMouseUpHandler { get; }
-        string OnMouseDownHandler { get; }
+        string OnClickHandler { get; set; }
+        string OnKeyPressHandler { get; set; }
+        string OnMouseMoveHandler { get; set; }
+        string OnMouseUpHandler { get; set; }
+        string OnMouseDownHandler { get; set;  }
     }
 }

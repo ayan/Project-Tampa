@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\CompileTargets.cs" />
     <Compile Include="Common\Properties.cs" />
     <Compile Include="Controls\BaseControl.cs" />
     <Compile Include="Controls\ButtonControl.cs" />
@@ -72,7 +73,11 @@
     <Compile Include="Controls\WinForms\SelectionOverlay.Designer.cs">
       <DependentUpon>SelectionOverlay.cs</DependentUpon>
     </Compile>
+    <Compile Include="InterfaceCompiler\CompilerFactory.cs" />
+    <Compile Include="InterfaceCompiler\Java\CanvasWriter.cs" />
+    <Compile Include="InterfaceCompiler\Java\JavaCompiler.cs" />
     <Compile Include="Interfaces\ICanvasController.cs" />
+    <Compile Include="Interfaces\ICompiler.cs" />
     <Compile Include="Interfaces\IControl.cs" />
     <Compile Include="Controls\ControlInstance.cs" />
     <Compile Include="Interfaces\IPaletteController.cs" />
@@ -137,9 +142,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="InterfaceCompiler\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
