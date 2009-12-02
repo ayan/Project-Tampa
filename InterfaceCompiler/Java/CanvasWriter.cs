@@ -109,15 +109,24 @@ namespace Tampa.InterfaceCompiler.Java
 
             CreateVar("_canvas", "JFrame");
 
-            Write("private JFrame ShowCanvas() {");
+            Write("private JFrame GetCanvas() {");
 
             _depth++;
             Write("_canvas = new JFrame();");
             Write("_canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);");
             Write("Insets insets = _canvas.getInsets();");
             Write("_canvas.setSize(" + _canvasNode.Attributes[CommonProperties.Width].Value + ", " + _canvasNode.Attributes[CommonProperties.Height].Value + ");");
+            if (_canvasNode.Attributes[CommonProperties.Name] != null)
+            {
+                Write("_canvas.setName(\"" + _canvasNode.Attributes[CommonProperties.Name].Value.Replace(" ", "_") + "\");");
+            }
+
+            if (_canvasNode.Attributes[CommonProperties.Text] != null)
+            {
+                Write("_canvas.setTitle(\"" + _canvasNode.Attributes[CommonProperties.Name].Value + "\");");
+            }
+
             Write("Container pane = _canvas.getContentPane();");
-            SerializeControlProperties("_canvas", _canvasNode);
 
             foreach (XmlNode childControl in _canvasNode.ChildNodes)
             {
@@ -125,7 +134,7 @@ namespace Tampa.InterfaceCompiler.Java
             }
 
             Write("");            
-            Write("return canvas;");
+            Write("return _canvas;");
 
             _depth--;
             Write("}");
