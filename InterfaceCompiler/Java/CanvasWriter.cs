@@ -26,7 +26,7 @@ namespace Tampa.InterfaceCompiler.Java
                     (new SelectableLabel()).GetType().Name, "JLabel"
                 },
                 { 
-                    (new SelectableTextBox()).GetType().Name, "JTextBox"
+                    (new SelectableTextBox()).GetType().Name, "JTextField"
                 },
                 {
                     "Canvas", "JFrame"
@@ -73,7 +73,7 @@ namespace Tampa.InterfaceCompiler.Java
 
                 if (attr != null)
                 {
-                    Write(name + "." + prop + " = " + GetTypedValue(attr.Value, _supportedControlProperties[prop]) + ";");
+                    Write(name + ".set" + prop + "(" + GetTypedValue(attr.Value, _supportedControlProperties[prop]) + ");");
                 }                
             }
 
@@ -113,11 +113,11 @@ namespace Tampa.InterfaceCompiler.Java
 
             _depth++;
             Write("_canvas = new JFrame();");
-            Write("canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);");
-            Write("Insets insets = canvas.getInsets();");
-            Write("canvas.setSize(" + _canvasNode.Attributes[CommonProperties.Width].Value + ", " + _canvasNode.Attributes[CommonProperties.Height].Value + ");");
-            Write("Container pane = canvas.getContentPane();");
-            SerializeControlProperties("canvas", _canvasNode);
+            Write("_canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);");
+            Write("Insets insets = _canvas.getInsets();");
+            Write("_canvas.setSize(" + _canvasNode.Attributes[CommonProperties.Width].Value + ", " + _canvasNode.Attributes[CommonProperties.Height].Value + ");");
+            Write("Container pane = _canvas.getContentPane();");
+            SerializeControlProperties("_canvas", _canvasNode);
 
             foreach (XmlNode childControl in _canvasNode.ChildNodes)
             {
