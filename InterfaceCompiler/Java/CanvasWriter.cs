@@ -114,9 +114,9 @@ namespace Tampa.InterfaceCompiler.Java
             _depth++;
             Write("_canvas = new JFrame();");
             Write("canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);");
-            Write("Insets insets = canvas.getInsets()");
+            Write("Insets insets = canvas.getInsets();");
             Write("canvas.setSize(" + _canvasNode.Attributes[CommonProperties.Width].Value + ", " + _canvasNode.Attributes[CommonProperties.Height].Value + ");");
-            Write("Container pane = canvas.getContentPane()");
+            Write("Container pane = canvas.getContentPane();");
             SerializeControlProperties("canvas", _canvasNode);
 
             foreach (XmlNode childControl in _canvasNode.ChildNodes)

@@ -71,7 +71,7 @@ namespace Tampa.InterfaceCompiler
 
         private void GenerateImports(XmlDocument canvasXml)
         {
-            Write("package start");
+            Write("package start;");
             Write("import javax.swing.*;");
             Write("import java.awt.*;");
             Write(String.Empty);
