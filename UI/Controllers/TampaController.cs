@@ -167,7 +167,7 @@ namespace Tampa.UI
             
             using (FileStream fs = File.Open(fileName, FileMode.Create))
             {
-                using (StreamWriter writer = new StreamWriter(fs, Encoding.Unicode))
+                using (StreamWriter writer = new StreamWriter(fs, Encoding.ASCII))
                 {
                     writer.Write(javaSource);
                 }
